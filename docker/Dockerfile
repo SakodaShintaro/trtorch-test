@@ -50,7 +50,7 @@ RUN unzip -q libtorch-cxx11-abi-shared-with-deps-1.7.1+cu110.zip
 
 # trtorch-test
 RUN git clone https://github.com/SakodaShintaro/trtorch-test
-WORKDIR /root/trtorch-test/cmake-build-debug
+WORKDIR /root/trtorch-test/cmake-build-release
 RUN cmake -DCMAKE_BUILD_TYPE=Release ..
 RUN make -j$(nproc)
 RUN ../model.py

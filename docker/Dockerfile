@@ -10,11 +10,11 @@ RUN ln -s /usr/bin/bazel-3.7.1 /usr/bin/bazel
 
 RUN pip install notebook
 
-# trtorchの導入
+# trtorch
 WORKDIR /opt
 RUN git clone https://github.com/NVIDIA/TRTorch trtorch
 WORKDIR /opt/trtorch
-RUN git checkout b228bf239aadd5f104af38ea64416bdda5f0aa57
+RUN git checkout 7e467a61ff592c231cd31dec6a209a3c363085e2
 RUN cp /opt/trtorch/docker/WORKSPACE.cu.docker /opt/trtorch/WORKSPACE
 
 # Workaround for bazel expecting both static and shared versions, we only use shared libraries inside container
@@ -45,11 +45,13 @@ WORKDIR /root
 RUN tar xvf /opt/trtorch/bazel-bin/libtrtorch.tar.gz .
 
 # libtorch
-RUN wget -P /root/ https://download.pytorch.org/libtorch/cu110/libtorch-shared-with-deps-1.7.1%2Bcu110.zip
-RUN unzip -q libtorch-cxx11-abi-shared-with-deps-1.7.0.zip
+RUN wget -P /root/ https://download.pytorch.org/libtorch/cu110/libtorch-cxx11-abi-shared-with-deps-1.7.1%2Bcu110.zip
+RUN unzip -q libtorch-cxx11-abi-shared-with-deps-1.7.1+cu110.zip
 
 # trtorch-test
 RUN git clone https://github.com/SakodaShintaro/trtorch-test
 WORKDIR /root/trtorch-test/cmake-build-debug
 RUN cmake -DCMAKE_BUILD_TYPE=Release ..
 RUN make -j$(nproc)
+RUN ../model.py
+# RUN ./Test

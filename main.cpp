@@ -4,7 +4,7 @@ using namespace std;
 
 void compile(bool fp16) {
   constexpr int64_t INPUT_CHANNEL_NUM = 256;
-  constexpr int64_t WIDTH = 9;
+  constexpr int64_t WIDTH = 32;
   torch::jit::Module module = torch::jit::load("model.ts");
   if (fp16) {
     module.to(torch::kCUDA, torch::kHalf);
@@ -37,7 +37,7 @@ int main() {
   cout << "fp16, this thread -> finish" << endl;
 
   // fp16, another thread -> NG
-  std::thread thread([]() { compile(true); });
-  thread.join();
+  std::thread thread1([]() { compile(true); });
+  thread1.join();
   cout << "fp16, another thread -> finish" << endl;
 }

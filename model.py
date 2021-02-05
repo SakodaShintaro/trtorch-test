@@ -7,7 +7,7 @@ import torch.nn as nn
 class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
-        self.convs = nn.ModuleList([nn.Conv2d(256, 256, 3, padding=1) for _ in range(80)])
+        self.convs = nn.ModuleList([nn.Conv2d(256, 256, 3, padding=1) for _ in range(100)])
 
     def forward(self, x):
         for c in self.convs:

@@ -37,7 +37,7 @@ RUN python3 setup.py install --use-cxx11-abi
 
 RUN conda init bash
 
-ENV LD_LIBRARY_PATH /opt/conda/lib/python3.6/site-packages/torch/lib:$LD_LIBRARY_PATh
+ENV LD_LIBRARY_PATH /opt/conda/lib/python3.6/site-packages/torch/lib:$LD_LIBRARY_PATH
 
 
 # extract trtorch

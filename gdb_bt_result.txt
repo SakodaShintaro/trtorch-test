@@ -1,0 +1,23 @@
+#0  __GI_raise (sig=sig@entry=6) at ../sysdeps/unix/sysv/linux/raise.c:50
+#1  0x00007fd983322859 in __GI_abort () at abort.c:79
+#2  0x00007fd9835a8911 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#3  0x00007fd9835b438c in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#4  0x00007fd9835b43f7 in std::terminate() () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#5  0x00007fd9835b46a9 in __cxa_throw () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#6  0x00007fda78b7a83e in c10::detail::torchCheckFail(char const*, char const*, unsigned int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) ()
+   from /root/libtorch/libtorch/lib/libc10.so
+#7  0x00007fda78adc6c1 in trtorch::core::lowering::passes::NotateModuleForFallback(torch::jit::Module const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::unordered_set<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >) ()
+   from /root/trtorch-test/../trtorch/lib/libtrtorch.so
+#8  0x00007fda78adb388 in trtorch::core::lowering::passes::NotateModuleForFallback(torch::jit::Module const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::unordered_set<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >) ()
+   from /root/trtorch-test/../trtorch/lib/libtrtorch.so
+#9  0x00007fda78abf442 in trtorch::core::lowering::LowerModule(torch::jit::Module const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::unordered_set<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >) ()
+   from /root/trtorch-test/../trtorch/lib/libtrtorch.so
+#10 0x00007fda78ac2a02 in trtorch::core::lowering::Lower(torch::jit::Module const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, trtorch::core::lowering::LowerInfo const&) () from /root/trtorch-test/../trtorch/lib/libtrtorch.so
+#11 0x00007fda789c367b in trtorch::core::ConvertGraphToTRTEngine(torch::jit::Module const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, trtorch::core::CompileSpec)
+    () from /root/trtorch-test/../trtorch/lib/libtrtorch.so
+#12 0x00007fda789c81cc in trtorch::core::CompileGraph(torch::jit::Module const&, trtorch::core::CompileSpec) () from /root/trtorch-test/../trtorch/lib/libtrtorch.so
+#13 0x00007fda789b7b48 in trtorch::CompileGraph(torch::jit::Module const&, trtorch::CompileSpec) ()
+   from /root/trtorch-test/../trtorch/lib/libtrtorch.so
+#14 0x000055e65c501b54 in compile(bool) ()
+#15 0x000055e65c501d93 in main ()
+

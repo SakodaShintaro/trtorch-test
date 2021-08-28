@@ -1,0 +1,19 @@
+terminate called after throwing an instance of 'c10::Error'
+  what():  Method 'forward' is not defined.
+Exception raised from get_method at external/libtorch/include/torch/csrc/jit/api/object.h:103 (most recent call first):
+frame #0: c10::Error::Error(c10::SourceLocation, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) + 0x69 (0x7f500d73d1d9 in /root/libtorch/libtorch/lib/libc10.so)
+frame #1: c10::detail::torchCheckFail(char const*, char const*, unsigned int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) + 0xd2 (0x7f500d739812 in /root/libtorch/libtorch/lib/libc10.so)
+frame #2: trtorch::core::lowering::passes::NotateModuleForFallback(torch::jit::Module const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::unordered_set<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >) + 0x2e21 (0x7f500d69b6c1 in /root/trtorch-test/../trtorch/lib/libtrtorch.so)
+frame #3: trtorch::core::lowering::passes::NotateModuleForFallback(torch::jit::Module const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::unordered_set<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >) + 0x1ae8 (0x7f500d69a388 in /root/trtorch-test/../trtorch/lib/libtrtorch.so)
+frame #4: trtorch::core::lowering::LowerModule(torch::jit::Module const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::unordered_set<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >) + 0x112 (0x7f500d67e442 in /root/trtorch-test/../trtorch/lib/libtrtorch.so)
+frame #5: trtorch::core::lowering::Lower(torch::jit::Module const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, trtorch::core::lowering::LowerInfo const&) + 0x1822 (0x7f500d681a02 in /root/trtorch-test/../trtorch/lib/libtrtorch.so)
+frame #6: trtorch::core::ConvertGraphToTRTEngine(torch::jit::Module const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, trtorch::core::CompileSpec) + 0x7b (0x7f500d58267b in /root/trtorch-test/../trtorch/lib/libtrtorch.so)
+frame #7: trtorch::core::CompileGraph(torch::jit::Module const&, trtorch::core::CompileSpec) + 0x26c (0x7f500d5871cc in /root/trtorch-test/../trtorch/lib/libtrtorch.so)
+frame #8: trtorch::CompileGraph(torch::jit::Module const&, trtorch::CompileSpec) + 0x468 (0x7f500d576b48 in /root/trtorch-test/../trtorch/lib/libtrtorch.so)
+frame #9: <unknown function> + 0x5b54 (0x563e0d351b54 in ./Test)
+frame #10: <unknown function> + 0x5d93 (0x563e0d351d93 in ./Test)
+frame #11: __libc_start_main + 0xf3 (0x7f4f17ee30b3 in /usr/lib/x86_64-linux-gnu/libc.so.6)
+frame #12: <unknown function> + 0x578e (0x563e0d35178e in ./Test)
+
+Aborted (core dumped)
+

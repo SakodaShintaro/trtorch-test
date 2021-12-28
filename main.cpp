@@ -1,10 +1,8 @@
 #include <torch/script.h>
-#include <trtorch/trtorch.h>
+#include <torch_tensorrt/torch_tensorrt.h>
 using namespace std;
 
 void compile(bool fp16) {
-  constexpr int64_t INPUT_CHANNEL_NUM = 256;
-  constexpr int64_t WIDTH = 32;
   torch::jit::Module module = torch::jit::load("model.ts");
   if (fp16) {
     module.to(torch::kCUDA, torch::kHalf);
@@ -13,13 +11,17 @@ void compile(bool fp16) {
   }
   module.eval();
 
-  std::vector<int64_t> in_sizes = {1, INPUT_CHANNEL_NUM, WIDTH, WIDTH};
-  trtorch::CompileSpec::InputRange range(in_sizes);
-  trtorch::CompileSpec info({range});
+  constexpr int64_t INPUT_CHANNEL_NUM = 256;
+  constexpr int64_t WIDTH = 32;
+  std::vector<int64_t> in_sizes = {1, WIDTH, INPUT_CHANNEL_NUM};
+  torch_tensorrt::Input range(in_sizes);
+  torch_tensorrt::ts::CompileSpec info({range});
   if (fp16) {
-    info.op_precision = torch::kHalf;
+    info.enabled_precisions.insert(torch::kHalf);
+  } else {
+    info.enabled_precisions.insert(torch::kF32);
   }
-  module = trtorch::CompileGraph(module, info);
+  module = torch_tensorrt::ts::compile(module, info);
 }
 
 int main() {

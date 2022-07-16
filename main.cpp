@@ -1,5 +1,5 @@
 #include <torch/script.h>
-#include <trtorch/trtorch.h>
+#include <torch_tensorrt/torch_tensorrt.h>
 using namespace std;
 
 void compile(bool fp16) {
@@ -14,12 +14,14 @@ void compile(bool fp16) {
   module.eval();
 
   std::vector<int64_t> in_sizes = {1, INPUT_CHANNEL_NUM, WIDTH, WIDTH};
-  trtorch::CompileSpec::InputRange range(in_sizes);
-  trtorch::CompileSpec info({range});
+
+  auto input = (fp16 ? torch_tensorrt::Input(in_sizes, torch::kHalf) : torch_tensorrt::Input(in_sizes, torch::kFloat32));
+  auto compile_settings = torch_tensorrt::ts::CompileSpec({input});
   if (fp16) {
-    info.op_precision = torch::kHalf;
+    compile_settings.enabled_precisions = {torch::kHalf};
+  } else {
   }
-  module = trtorch::CompileGraph(module, info);
+  module = torch_tensorrt::ts::compile(module, compile_settings);
 }
 
 int main() {

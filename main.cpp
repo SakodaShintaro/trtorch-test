@@ -30,7 +30,7 @@ torch::jit::Module compile(int64_t gpu_id) {
 void infer(torch::jit::Module& module, int64_t gpu_id) {
   const torch::Device device(torch::kCUDA, gpu_id);
   for (int64_t batch_size : {kOptBatchSize, kOptBatchSize, kOptBatchSize}) {
-    torch::Tensor sample_input = torch::zeros({batch_size, INPUT_CHANNEL_NUM, WIDTH, WIDTH}).to(device, kScalarType);
+    torch::Tensor sample_input = torch::ones({batch_size, INPUT_CHANNEL_NUM, WIDTH, WIDTH}).to(device, kScalarType);
     auto out = module.forward({sample_input});
     auto tuple = out.toTuple();
     torch::Tensor policy = tuple->elements()[0].toTensor();
@@ -39,6 +39,9 @@ void infer(torch::jit::Module& module, int64_t gpu_id) {
     policy = policy.cpu();
     value = value.cpu();
     std::cout << policy.sizes() << " " << value.sizes() << std::endl;
+    policy = policy.mean({1, 2, 3});
+    value = value.mean({1});
+    std::cout << policy << " " << value << std::endl;
   }
 }
 

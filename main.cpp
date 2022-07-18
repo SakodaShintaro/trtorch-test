@@ -14,26 +14,30 @@ torch::jit::Module compile(int64_t gpu_id) {
   module.to(device, kScalarType);
   module.eval();
 
-  std::vector<int64_t> in_min = {1, INPUT_CHANNEL_NUM, WIDTH, WIDTH};
+  // std::vector<int64_t> in_min = {1, INPUT_CHANNEL_NUM, WIDTH, WIDTH};
   std::vector<int64_t> in_opt = {kOptBatchSize, INPUT_CHANNEL_NUM, WIDTH, WIDTH};
-  std::vector<int64_t> in_max = {kOptBatchSize * 2, INPUT_CHANNEL_NUM, WIDTH, WIDTH};
+  // std::vector<int64_t> in_max = {kOptBatchSize * 2, INPUT_CHANNEL_NUM, WIDTH, WIDTH};
 
-  auto input = torch_tensorrt::Input(in_min, in_opt, in_max, kScalarType);
+  // auto input = torch_tensorrt::Input(in_min, in_opt, in_max, kScalarType);
+  auto input = torch_tensorrt::Input(in_opt, kScalarType);
   auto compile_settings = torch_tensorrt::ts::CompileSpec({input});
   compile_settings.enabled_precisions = {kScalarType};
+  compile_settings.device.gpu_id = gpu_id;
   module = torch_tensorrt::ts::compile(module, compile_settings);
   return module;
 }
 
 void infer(torch::jit::Module& module, int64_t gpu_id) {
   const torch::Device device(torch::kCUDA, gpu_id);
-  for (int64_t batch_size : {(int64_t)1, kOptBatchSize, kOptBatchSize * 2}) {
-    torch::Tensor sample_input =
-        torch::zeros({batch_size, INPUT_CHANNEL_NUM, WIDTH, WIDTH}).to(device, kScalarType);
+  for (int64_t batch_size : {kOptBatchSize, kOptBatchSize, kOptBatchSize}) {
+    torch::Tensor sample_input = torch::zeros({batch_size, INPUT_CHANNEL_NUM, WIDTH, WIDTH}).to(device, kScalarType);
     auto out = module.forward({sample_input});
     auto tuple = out.toTuple();
-    torch::Tensor policy = tuple->elements()[0].toTensor().cpu();
-    torch::Tensor value = tuple->elements()[1].toTensor().cpu();
+    torch::Tensor policy = tuple->elements()[0].toTensor();
+    torch::Tensor value = tuple->elements()[1].toTensor();
+    std::cout << "gpu_id = " << gpu_id << " " << device << " " << policy.device() << " " << value.device() << std::endl;
+    policy = policy.cpu();
+    value = value.cpu();
     std::cout << policy.sizes() << " " << value.sizes() << std::endl;
   }
 }

@@ -9,14 +9,17 @@ void compile() {
   module.to(torch::kCUDA, torch::kFloat16);
   module.eval();
 
-  std::vector<int64_t> in_sizes = {1, INPUT_CHANNEL_NUM, WIDTH, WIDTH};
+  const int64_t kOptBatchSize = 8;
+  std::vector<int64_t> in_min = {1, INPUT_CHANNEL_NUM, WIDTH, WIDTH};
+  std::vector<int64_t> in_opt = {kOptBatchSize, INPUT_CHANNEL_NUM, WIDTH, WIDTH};
+  std::vector<int64_t> in_max = {kOptBatchSize * 2, INPUT_CHANNEL_NUM, WIDTH, WIDTH};
 
-  auto input = torch_tensorrt::Input(in_sizes, torch::kFloat16);
+  auto input = torch_tensorrt::Input(in_min, in_opt, in_max, torch::kFloat16);
   auto compile_settings = torch_tensorrt::ts::CompileSpec({input});
   compile_settings.enabled_precisions = {torch::kFloat16};
   module = torch_tensorrt::ts::compile(module, compile_settings);
 
-  for (int64_t batch_size : {1, 8, 16}) {
+  for (int64_t batch_size : {(int64_t)1, kOptBatchSize, kOptBatchSize * 2}) {
     torch::Tensor sample_input =
         torch::zeros({batch_size, INPUT_CHANNEL_NUM, WIDTH, WIDTH}).to(torch::kCUDA, torch::kFloat16);
     auto out = module.forward({sample_input});

@@ -6,7 +6,9 @@ void compile() {
   constexpr int64_t INPUT_CHANNEL_NUM = 42;
   constexpr int64_t WIDTH = 9;
   torch::jit::Module module = torch::jit::load("shogi_cat_bl10_ch256.ts");
-  module.to(torch::kCUDA, torch::kFloat16);
+
+  c10::ScalarType kScalarType = torch::kFloat16;
+  module.to(torch::kCUDA, kScalarType);
   module.eval();
 
   const int64_t kOptBatchSize = 8;
@@ -14,14 +16,14 @@ void compile() {
   std::vector<int64_t> in_opt = {kOptBatchSize, INPUT_CHANNEL_NUM, WIDTH, WIDTH};
   std::vector<int64_t> in_max = {kOptBatchSize * 2, INPUT_CHANNEL_NUM, WIDTH, WIDTH};
 
-  auto input = torch_tensorrt::Input(in_min, in_opt, in_max, torch::kFloat16);
+  auto input = torch_tensorrt::Input(in_min, in_opt, in_max, kScalarType);
   auto compile_settings = torch_tensorrt::ts::CompileSpec({input});
-  compile_settings.enabled_precisions = {torch::kFloat16};
+  compile_settings.enabled_precisions = {kScalarType};
   module = torch_tensorrt::ts::compile(module, compile_settings);
 
   for (int64_t batch_size : {(int64_t)1, kOptBatchSize, kOptBatchSize * 2}) {
     torch::Tensor sample_input =
-        torch::zeros({batch_size, INPUT_CHANNEL_NUM, WIDTH, WIDTH}).to(torch::kCUDA, torch::kFloat16);
+        torch::zeros({batch_size, INPUT_CHANNEL_NUM, WIDTH, WIDTH}).to(torch::kCUDA, kScalarType);
     auto out = module.forward({sample_input});
     auto tuple = out.toTuple();
     torch::Tensor policy = tuple->elements()[0].toTensor();
